@@ -33,6 +33,27 @@ namespace Streamish.Tests
         }
 
         [Fact]
+        public void Search_By_Title_Returns_Result()
+        {
+            // Arrange 
+            var videoCount = 20;
+            var videos = CreateTestVideos(videoCount);
+
+            var repo = new InMemoryVideoRepository(videos);
+            var controller = new VideoController(repo);
+
+            // Act 
+            var result = controller.Search("2", true);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var actualVideos = Assert.IsType<List<Video>>(okResult.Value);
+
+            Assert.Equal(videoCount, actualVideos.Count);
+            Assert.Equal(videos, actualVideos);
+        }
+
+        [Fact]
         public void Get_By_Id_Returns_NotFound_When_Given_Unknown_id()
         {
             // Arrange 
